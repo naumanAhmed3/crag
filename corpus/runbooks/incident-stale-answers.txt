@@ -1,0 +1,67 @@
+RUNBOOK — Incident: users report stale answers
+
+Audience: Tier-2 ops; on-call retrieval engineer.
+Severity: P3 unless reproduced on policy-critical queries → P2.
+
+Definition of "stale"
+  An answer cites content that no longer matches the current
+  authoritative document (e.g. quotes an old policy clause, or
+  references a file that has since been removed).
+
+Triage (≤ 5 minutes)
+
+  1. Capture the query, the answer, and the cited file path(s) from
+     the user report.
+  2. From the host, run:
+       uv run crag stats
+     Note `manifest files`, `collection points`, and the data dir mtime.
+  3. From the host, check the cited file on disk:
+       ls -l <cited_file>
+       stat -f %m <cited_file>     # macOS mtime
+       stat -c %Y <cited_file>     # Linux mtime
+     Compare against the manifest's `ingested_at` for that path:
+       sqlite3 $CRAG_DATA_DIR/manifest.sqlite \
+         "SELECT path, ingested_at, mtime FROM files WHERE path LIKE '%<file>%';"
+
+Likely cause and the fix
+
+  A) Manifest mtime is older than the file's current mtime
+     → an ingest was skipped because the previous run completed,
+       then the file changed, then no subsequent ingest ran.
+     Fix: re-run `crag ingest <corpus_root>`. Incremental will
+       process only the changed file.
+
+  B) The file is no longer on disk but is still in the manifest
+     → an ingest with a different `<corpus_root>` was run, so
+       deletion-detection didn't see it.
+     Fix: re-run `crag ingest` with the *original* root that the
+       manifest was built against. Deletion-detection is scoped to
+       the roots passed in.
+
+  C) Manifest and file mtime match but the answer is still stale
+     → the chunking config or embedding model has drifted since
+       last ingest. The index is technically up-to-date but the
+       semantics have changed.
+     Fix: rebuild the index with the new config:
+       rm -rf $CRAG_DATA_DIR
+       crag ingest <corpus_root>
+
+Prevention
+
+  - For non-trivial corpora, schedule the ingest. `make ingest-sample`
+    as a cron entry at 5-minute intervals catches almost all
+    file-change races at modest cost (mtime-only check on unchanged
+    files is microseconds per file).
+  - For corpora with strict freshness SLAs, run the watcher
+    (`crag ingest --watch <root>`) which streams file events.
+  - When the chunker config or embedding model changes, bump the
+    collection name (config: `collection_suffix`) so a fresh
+    collection is built alongside the old, with a clean cutover.
+
+Postmortem checklist
+  [_] Was the stale window > 1 hour? If yes, the schedule is wrong.
+  [_] Was an unrelated ingest run with a different root? If yes,
+      document the canonical root and the failure mode in the team
+      runbook.
+  [_] Was the answer cited correctly (the wrong-but-cited case)? That
+      is the worst class — write the failing query into the gold set.

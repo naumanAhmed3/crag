@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# uv / venv
+.venv/
+.python-version
+
+# crag runtime state
+data/             # qdrant local store + sqlite manifest
+*.db
+*.sqlite
+*.sqlite3
+
+# OS
+.DS_Store
+.idea/
+.vscode/
+
+# Build
+dist/
+build/
+
+# Allow committed benchmark outputs but skip transient runs
+benchmarks/results/_scratch/

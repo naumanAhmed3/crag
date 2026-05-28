@@ -1,0 +1,246 @@
+{
+  "study_id": "00-baseline",
+  "notes": "Dense-only retrieval with the default embedding model. Sole leg; no BM25, no reranker. Establishes the starting point for Recall@5, Precision@5, MRR, and per-query latency.",
+  "hardware": {
+    "platform": "macOS-26.5-arm64-arm-64bit",
+    "machine": "arm64",
+    "processor": "arm",
+    "python": "3.11.15",
+    "ram_gb": 16.0,
+    "cpu_count": 10,
+    "started_at": "2026-05-28T01:30:24+0500",
+    "git_sha": null,
+    "torch": "2.12.0",
+    "numpy": "2.4.6"
+  },
+  "runs": [
+    {
+      "label": "dense_only / bge-small / final_top_k=5",
+      "metrics": {
+        "n_questions": 15,
+        "recall_at_k": 1.0,
+        "precision_at_k": 0.3733,
+        "mrr": 0.8833,
+        "substring_recall": 0.9333,
+        "per_question": [
+          {
+            "id": "q01",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/handbook.docx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/README.md"
+            ]
+          },
+          {
+            "id": "q02",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/handbook.docx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/health_check.py",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/ollama.md"
+            ]
+          },
+          {
+            "id": "q03",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 0.5,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/embeddings.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/bm25.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/bm25.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md"
+            ]
+          },
+          {
+            "id": "q04",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/rrf.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/rrf.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/quantization.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/quantization.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/reranking.md"
+            ]
+          },
+          {
+            "id": "q05",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/chunking.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/chunking.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/benchmarks.xlsx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/bm25.md"
+            ]
+          },
+          {
+            "id": "q06",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/reranking.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/reranking.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/embeddings.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/rrf.md"
+            ]
+          },
+          {
+            "id": "q07",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/quantization.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/quantization.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/benchmarks.xlsx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/benchmarks.xlsx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md"
+            ]
+          },
+          {
+            "id": "q08",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt"
+            ]
+          },
+          {
+            "id": "q09",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/configs/production.yaml",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/health_check.py"
+            ]
+          },
+          {
+            "id": "q10",
+            "recall": 1,
+            "precision_at_k": 0.2,
+            "rr": 0.25,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/incident-stale-answers.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/eviction.py",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/incident-stale-answers.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/incremental-ingestion.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/health_check.py"
+            ]
+          },
+          {
+            "id": "q11",
+            "recall": 1,
+            "precision_at_k": 0.6,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/grounding-refusal.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/bm25.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/grounding-refusal.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/handbook.docx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/benchmarks.xlsx"
+            ]
+          },
+          {
+            "id": "q12",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 0.5,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/health_check.py",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/ollama.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/ollama.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt"
+            ]
+          },
+          {
+            "id": "q13",
+            "recall": 1,
+            "precision_at_k": 0.4,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/benchmarks.xlsx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/cold-start.txt",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md"
+            ]
+          },
+          {
+            "id": "q14",
+            "recall": 1,
+            "precision_at_k": 0.2,
+            "rr": 1.0,
+            "substring_hit": 0,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/embeddings.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/qdrant.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/chunking.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/hnsw.md"
+            ]
+          },
+          {
+            "id": "q15",
+            "recall": 1,
+            "precision_at_k": 0.2,
+            "rr": 1.0,
+            "substring_hit": 1,
+            "top_files": [
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/code/eviction.py",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/handbook.docx",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/airgap-deployment.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/notes/incremental-ingestion.md",
+              "/Users/nouman/Documents/portfolio-projects/all-projects/crag/corpus/runbooks/incident-stale-answers.txt"
+            ]
+          }
+        ]
+      },
+      "timing": {
+        "p50_ms": 10.3,
+        "p95_ms": 13.1,
+        "mean_ms": 11.0,
+        "n": 15
+      }
+    }
+  ]
+}

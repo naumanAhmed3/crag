@@ -1,0 +1,12 @@
+line-length = 100
+target-version = "py311"
+
+[lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = [
+    "E501",   # we let formatters / human judgement own line breaks
+    "B008",   # typer requires Argument/Option in defaults; idiomatic for the framework
+    "RUF002", # `×` MULTIPLICATION SIGN appears intentionally in risk / cost tables
+    "RUF003", # same family — ambiguous punctuation in docs/findings is intentional
+    "SIM105", # `try ... except: pass` reads fine in close()-on-shutdown paths
+]

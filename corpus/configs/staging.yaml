@@ -1,0 +1,40 @@
+# Staging configuration — Vantage Holdings.
+#
+# Differences from production:
+#   - smaller embedding model so the staging box (no discrete GPU) can
+#     finish ingest in minutes
+#   - reranker disabled to keep query latency cheap during smoke tests
+#   - log level lifted to DEBUG so trace dumps are useful in
+#     bug-bash sessions
+
+data_dir: /var/lib/crag/staging
+log_level: DEBUG
+
+embedding:
+  model: BAAI/bge-small-en-v1.5
+  batch_size: 32
+
+chunking:
+  tokens: 512
+  overlap: 64
+  strategy: sentence-snap
+
+retrieval:
+  dense_top_k: 20
+  sparse_top_k: 20
+  rrf_k: 60
+  rerank_top_k: 8
+  final_top_k: 5
+
+reranker:
+  enabled: false                 # off in staging — measure raw retrieval
+
+llm:
+  backend: ollama
+  model: phi3:3.8b-instruct-q4_K_M   # ~2.3 GB; cheap for smoke tests
+  max_tokens: 400
+  temperature: 0.2
+  context_window: 4096
+
+grounding:
+  refuse_off_corpus: true

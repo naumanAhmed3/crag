@@ -1,0 +1,87 @@
+# Gold-set evaluation questions for the bundled sample corpus.
+#
+# Each item:
+#   id                   stable identifier — never recycle
+#   question             literal user query
+#   expected_files       any retrieved chunk whose file_path contains
+#                        one of these substrings counts as a relevant hit
+#   expected_substrings  (optional) verbatim phrases that should appear
+#                        in the concatenated retrieved-chunk text
+
+- id: q01
+  question: "How does HNSW work?"
+  expected_files: ["hnsw.md"]
+  expected_substrings:
+    - "Hierarchical Navigable Small World"
+    - "multi-layer proximity graph"
+
+- id: q02
+  question: "What does the ef_search parameter control in HNSW?"
+  expected_files: ["hnsw.md"]
+  expected_substrings: ["ef = 32"]
+
+- id: q03
+  question: "Why is BM25 still useful next to dense embeddings?"
+  expected_files: ["bm25.md"]
+  expected_substrings: ["identifiers"]
+
+- id: q04
+  question: "What does the k constant do in Reciprocal Rank Fusion?"
+  expected_files: ["rrf.md"]
+  expected_substrings: ["k = 60", "damp"]
+
+- id: q05
+  question: "Which chunk size and overlap should I start with for prose?"
+  expected_files: ["chunking.md"]
+  expected_substrings: ["512", "64"]
+
+- id: q06
+  question: "What is the difference between bi-encoder and cross-encoder retrievers?"
+  expected_files: ["reranking.md"]
+  expected_substrings: ["independently", "concatenated"]
+
+- id: q07
+  question: "How much VRAM does a 7B model at q4_K_M actually use?"
+  expected_files: ["quantization.md"]
+  expected_substrings: ["4.4 GB"]
+
+- id: q08
+  question: "When should I move from Qdrant local mode to server mode?"
+  expected_files: ["qdrant.md"]
+  expected_substrings: ["concurrent writers"]
+
+- id: q09
+  question: "What environment variables make Hugging Face models work offline?"
+  expected_files: ["airgap-deployment.md"]
+  expected_substrings: ["TRANSFORMERS_OFFLINE", "HF_HUB_OFFLINE"]
+
+- id: q10
+  question: "How does crag detect which files have already been ingested?"
+  expected_files: ["incremental-ingestion.md"]
+  expected_substrings: ["mtime", "manifest"]
+
+- id: q11
+  question: "What is the verbatim refusal string the system must use?"
+  expected_files: ["grounding-refusal.md", "handbook.docx"]
+  expected_substrings:
+    - "I don't have enough information in the indexed corpus to answer this"
+
+- id: q12
+  question: "What does OLLAMA_KEEP_ALIVE control?"
+  expected_files: ["ollama.md"]
+  expected_substrings: ["how long a model stays loaded"]
+
+- id: q13
+  question: "What is the cold-start runbook's first verification step?"
+  expected_files: ["cold-start.txt"]
+  expected_substrings: ["Python 3.11"]
+
+- id: q14
+  question: "What is the recommended embedding model and why?"
+  expected_files: ["production.yaml", "embeddings.md"]
+  expected_substrings: ["bge-small-en-v1.5"]
+
+- id: q15
+  question: "What does the eviction script log to the audit trail?"
+  expected_files: ["eviction.py"]
+  expected_substrings: ["sha256", "chunks_removed"]

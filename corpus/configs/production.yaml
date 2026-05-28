@@ -1,0 +1,38 @@
+# Production configuration — Vantage Holdings reference.
+#
+# Settings here override the library defaults via the CRAG_* environment
+# variables. The same file is used by deploy/ansible/render-env.yml to
+# produce the actual .env consumed at runtime.
+
+data_dir: /var/lib/crag/data
+log_level: INFO
+
+embedding:
+  model: BAAI/bge-small-en-v1.5
+  batch_size: 64                 # CPU has the headroom; raise from default 32
+
+chunking:
+  tokens: 512
+  overlap: 64
+  strategy: sentence-snap        # locked from studies/03
+
+retrieval:
+  dense_top_k: 30                # widened from default 20 for technical corpora
+  sparse_top_k: 30
+  rrf_k: 60                      # locked; do not vary outside an A/B test
+  rerank_top_k: 12
+  final_top_k: 6
+
+reranker:
+  enabled: true
+  model: BAAI/bge-reranker-v2-m3
+
+llm:
+  backend: ollama
+  model: qwen2.5:7b-instruct-q4_K_M
+  max_tokens: 600
+  temperature: 0.15              # tuned conservative — production audit posture
+  context_window: 8192
+
+grounding:
+  refuse_off_corpus: true        # never disable in production

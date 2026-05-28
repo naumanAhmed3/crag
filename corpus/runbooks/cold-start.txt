@@ -1,0 +1,55 @@
+RUNBOOK — Cold-starting the crag service on a fresh host
+
+Audience: Tier-2 ops, anyone bringing the system up on a new box.
+Severity: routine.
+Estimated time: 10–15 minutes if all artifacts pre-staged.
+
+Pre-flight
+  1. Verify Python 3.11 available: `python3 --version`. If missing,
+     `uv python install 3.11`.
+  2. Verify Ollama installed and running: `curl -s http://localhost:11434/api/tags`.
+     If empty / unreachable: `brew install ollama && ollama serve &`.
+  3. Verify the generation model present: `ollama list | grep qwen2.5`.
+     If missing: `ollama pull qwen2.5:7b-instruct-q4_K_M` (~4.4 GB).
+
+Bring-up
+  1. cd into the repo root.
+  2. `make setup` — creates the venv, installs all deps. ~2 minutes.
+  3. `make ingest-sample` — embeds the bundled corpus. ~30 s on CPU.
+  4. `make stats` — confirm > 0 chunks in the manifest and store.
+  5. `make ask Q="How does HNSW work"` — confirms end-to-end including
+     generation.
+
+Common failures and the first thing to try
+
+  Symptom: `make ingest-sample` exits at "downloading model".
+    Cause:  No outbound network on this host or HF Hub unreachable.
+    Fix:    Pre-stage the embedding model:
+              On a connected machine: rm -rf ~/.cache/huggingface/hub
+              python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('BAAI/bge-small-en-v1.5')"
+              tar czf hf-cache.tgz -C ~/.cache huggingface
+            Move tarball to this host. Untar into ~/.cache.
+            Export TRANSFORMERS_OFFLINE=1.
+
+  Symptom: `make ask` says "the index is empty".
+    Cause:  Manifest and store live in $CRAG_DATA_DIR (default ./data)
+            which is gitignored. Fresh checkouts need re-ingest.
+    Fix:    Re-run `make ingest-sample` or your own ingest command.
+
+  Symptom: Generation step hangs at "loading model" for > 60 s.
+    Cause:  First Ollama load of the model into VRAM. Subsequent calls
+            are fast.
+    Fix:    Wait. To skip the cold load on future starts, export
+              OLLAMA_KEEP_ALIVE=24h
+            before `ollama serve`.
+
+Healthcheck command (the one to bind your liveness probe to)
+  `uv run crag stats --json` — exits 0, prints a JSON object containing
+  collection_points > 0 and llm_backend != "none".
+
+Escalation
+  If the system is up but answers look wrong, escalate to the on-call
+  retrieval engineer with the output of:
+      uv run crag eval --json > /tmp/eval.json
+      uv run crag stats --json > /tmp/stats.json
+  along with the offending query and its actual output.

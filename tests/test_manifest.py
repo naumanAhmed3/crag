@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from pathlib import Path
 import os
+from pathlib import Path
 
 from crag.ingest.manifest import Manifest, chunk_id, file_sha256
 

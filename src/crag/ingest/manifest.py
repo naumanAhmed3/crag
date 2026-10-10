@@ -87,15 +87,22 @@ class Manifest:
     # ── inspection ───────────────────────────────────────────────────
 
     def unchanged(self, path: Path) -> bool:
-        """Has this file already been ingested with the same mtime + size?"""
+        """Return whether the on-disk bytes match the committed manifest.
+
+        Modification times are only metadata and can be preserved by copy and
+        restore operations.  The stored content digest is the authoritative
+        comparison so same-size edits cannot be skipped accidentally.
+        """
         row = self._conn.execute(
-            "SELECT mtime, size FROM files WHERE path = ?",
+            "SELECT size, sha256 FROM files WHERE path = ?",
             (str(path),),
         ).fetchone()
         if row is None:
             return False
         st = path.stat()
-        return row[0] == st.st_mtime and row[1] == st.st_size
+        if row[0] != st.st_size:
+            return False
+        return row[1] == file_sha256(path)
 
     def get(self, path: Path) -> FileRecord | None:
         row = self._conn.execute(
@@ -112,6 +119,16 @@ class Manifest:
 
     def all_chunk_ids(self) -> list[str]:
         return [r[0] for r in self._conn.execute("SELECT id FROM chunks").fetchall()]
+
+    def chunk_ids_for(self, path: Path) -> list[str]:
+        """Return the committed vector identifiers owned by one file."""
+        return [
+            row[0]
+            for row in self._conn.execute(
+                "SELECT id FROM chunks WHERE file_path = ? ORDER BY ordinal",
+                (str(path),),
+            ).fetchall()
+        ]
 
     def stats(self) -> dict[str, int]:
         files = self._conn.execute("SELECT COUNT(*) FROM files").fetchone()[0]

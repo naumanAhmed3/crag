@@ -143,9 +143,12 @@ def ingest(
             for c in chunks
         ]
 
-        # Upsert into the manifest first (computes which old chunks to evict),
-        # then mirror that into the vector store.
+        # Store the new generation before committing the manifest.  A vector
+        # failure therefore leaves the previous committed generation intact;
+        # a manifest failure may leave deterministic orphan points, but the
+        # next run still sees the old digest and safely retries the operation.
         sha = file_sha256(path)
+        store.upsert(chunk_ids, np.asarray(vectors), payloads)
         old_chunk_ids = manifest.upsert_file(
             path,
             sha,
@@ -154,7 +157,6 @@ def ingest(
         if old_chunk_ids:
             store.delete(old_chunk_ids)
             stats.chunks_removed += len(old_chunk_ids)
-        store.upsert(chunk_ids, np.asarray(vectors), payloads)
 
         if existed:
             stats.files_updated += 1
@@ -165,18 +167,22 @@ def ingest(
     # ── deletion detection ───────────────────────────────────────────
     # If a root was provided (or inferred), scope the deletion check to it
     # so we never accidentally evict chunks belonging to a different corpus.
-    scopes: list[str] = (
-        [str(collection_root.resolve())] if collection_root else [str(p.resolve()) for p in paths]
+    scopes: list[Path] = (
+        [collection_root.resolve()] if collection_root else [p.resolve() for p in paths]
     )
     for fr in manifest.all_files():
         if fr.path in on_disk:
             continue
-        if not any(fr.path.startswith(scope) for scope in scopes):
+        manifest_path = Path(fr.path).resolve()
+        if not any(
+            manifest_path == scope or manifest_path.is_relative_to(scope) for scope in scopes
+        ):
             continue
-        evicted = manifest.remove(Path(fr.path))
+        evicted = manifest.chunk_ids_for(manifest_path)
         if evicted:
             store.delete(evicted)
             stats.chunks_removed += len(evicted)
+        manifest.remove(manifest_path)
         stats.files_removed += 1
 
     stats.total_seconds = time.perf_counter() - t0

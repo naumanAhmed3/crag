@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from crag.ingest.manifest import Manifest, chunk_id, file_sha256
@@ -39,7 +40,7 @@ def test_manifest_upsert_and_unchanged(tmp_path: Path) -> None:
         sha = file_sha256(p)
         evicted = m.upsert_file(p, sha, [("c1", 0, 5), ("c2", 1, 7)])
         assert evicted == []  # nothing prior
-        assert m.unchanged(p)  # mtime + size match
+        assert m.unchanged(p)  # content digest matches
         assert m.stats()["files"] == 1
         assert m.stats()["chunks"] == 2
 
@@ -54,5 +55,19 @@ def test_manifest_upsert_and_unchanged(tmp_path: Path) -> None:
         assert sorted(evicted2) == ["c1", "c3"]
         assert m.stats()["files"] == 0
         assert m.stats()["chunks"] == 0
+    finally:
+        m.close()
+
+
+def test_manifest_detects_same_size_edit_with_preserved_mtime(tmp_path: Path) -> None:
+    p = tmp_path / "same-size.md"
+    p.write_text("aaaa")
+    original = p.stat()
+    m = Manifest(tmp_path / "manifest.sqlite")
+    try:
+        m.upsert_file(p, file_sha256(p), [("c1", 0, 1)])
+        p.write_text("bbbb")
+        os.utime(p, ns=(original.st_atime_ns, original.st_mtime_ns))
+        assert not m.unchanged(p)
     finally:
         m.close()

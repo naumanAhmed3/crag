@@ -174,7 +174,9 @@ def ingest(
         if fr.path in on_disk:
             continue
         manifest_path = Path(fr.path).resolve()
-        if not any(manifest_path == scope or manifest_path.is_relative_to(scope) for scope in scopes):
+        if not any(
+            manifest_path == scope or manifest_path.is_relative_to(scope) for scope in scopes
+        ):
             continue
         evicted = manifest.chunk_ids_for(manifest_path)
         if evicted:
